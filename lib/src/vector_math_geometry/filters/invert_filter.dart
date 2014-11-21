@@ -16,16 +16,29 @@
   2. Altered source versions must be plainly marked as such, and must not be
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
+
 */
 
-part of vector_math;
+part of vector_math_geometry;
 
-/// Convert [radians] to degrees.
-double degrees(double radians) {
-  return radians * radians2degrees;
-}
+class InvertFilter extends InplaceGeometryFilter {
+  void filterInplace(MeshGeometry mesh) {
+    // TODO: Do the tangents need to be inverted? Maybe just the W component?
+    // TODO: Should modify in-place be allowed, or should it be required
+    // to return a new geometry?
 
-/// Convert [degrees] to radians.
-double radians(double degrees) {
-  return degrees * degrees2radians;
+    // Swap all the triangle indices
+    for (int i = 0; i < mesh.indices.length; i += 3) {
+      int tmp = mesh.indices[i];
+      mesh.indices[i] = mesh.indices[i + 2];
+      mesh.indices[i + 2] = tmp;
+    }
+
+    Vector3List normals = mesh.getViewForAttrib('NORMAL');
+    if (normals != null) {
+      for (int i = 0; i < normals.length; ++i) {
+        normals[i] = -normals[i];
+      }
+    }
+  }
 }

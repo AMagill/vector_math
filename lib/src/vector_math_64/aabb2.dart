@@ -41,7 +41,12 @@ class Aabb2 {
     _min = new Vector2.copy(other._min),
     _max = new Vector2.copy(other._max) {}
 
+  @deprecated
   Aabb2.minmax(Vector2 min_, Vector2 max_) :
+    _min = new Vector2.copy(min_),
+    _max = new Vector2.copy(max_) {}
+
+  Aabb2.minMax(Vector2 min_, Vector2 max_) :
     _min = new Vector2.copy(min_),
     _max = new Vector2.copy(max_) {}
 
@@ -121,19 +126,34 @@ class Aabb2 {
   }
 
   /// Return if [this] contains [other].
-  bool contains(Aabb2 other) {
+  bool containsAabb2(Aabb2 other) {
     return min.x < other.min.x &&
            min.y < other.min.y &&
            max.y > other.max.y &&
            max.x > other.max.x;
   }
 
+  /// Return if [this] contains [other].
+  bool containsVector2(Vector2 other) {
+    return min.x < other.x &&
+           min.y < other.y &&
+           max.x > other.x &&
+           max.y > other.y;
+  }
+
   /// Return if [this] intersects with [other].
-  bool intersectsWith(Aabb2 other) {
+  bool intersectsWithAabb2(Aabb2 other) {
     return min.x <= other.max.x &&
            min.y <= other.max.y &&
            max.x >= other.min.x &&
            max.y >= other.min.y;
   }
 
+  /// Return if [this] intersects with [other].
+  bool intersectsWithVector2(Vector2 other) {
+    return min.x <= other.x &&
+           min.y <= other.y &&
+           max.x >= other.x &&
+           max.y >= other.y;
+  }
 }

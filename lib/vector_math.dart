@@ -24,15 +24,17 @@ library vector_math;
 import 'dart:typed_data';
 import 'dart:math' as Math;
 
-part 'src/vector_math/angle.dart';
+part 'src/vector_math/utilities.dart';
 part 'src/vector_math/aabb2.dart';
 part 'src/vector_math/aabb3.dart';
+part 'src/vector_math/colors.dart';
 part 'src/vector_math/constants.dart';
 part 'src/vector_math/error_helpers.dart';
 part 'src/vector_math/frustum.dart';
 part 'src/vector_math/matrix2.dart';
 part 'src/vector_math/matrix3.dart';
 part 'src/vector_math/matrix4.dart';
+part 'src/vector_math/noise.dart';
 part 'src/vector_math/opengl.dart';
 part 'src/vector_math/plane.dart';
 part 'src/vector_math/quaternion.dart';

@@ -1,21 +1,11 @@
 library console_test_harness;
 
-import 'dart:math' as Math;
 import 'package:unittest/unittest.dart';
-import 'package:unittest/vm_config.dart';
-import 'package:vector_math/vector_math.dart';
-import 'package:vector_math/vector_math_lists.dart';
-import 'package:vector_math/vector_math_geometry.dart';
 import 'vector_math_test.dart';
 
-void testCore(Configuration config) {
-  unittestConfiguration = config;
+void main() {
   groupSep = ' - ';
 
-  main();
-}
-
-void main() {
   group('Quaternion', () {
     QuaternionTest qt = new QuaternionTest();
     qt.run();
@@ -41,13 +31,14 @@ void main() {
     at.run();
   });
 
-  group('Utility', () {
-    test('degrees', () {
-      relativeTest(degrees(Math.PI), 180.0);
-    });
-    test('radians', () {
-      relativeTest(radians(90.0), Math.PI/2.0);
-    });
+  group('Colors', () {
+    ColorsTest ct = new ColorsTest();
+    ct.run();
+  });
+
+  group('Utilities', () {
+    var ut = new UtilitiesTest();
+    ut.run();
   });
 
   group('Geometry', () {
@@ -78,6 +69,11 @@ void main() {
   group('Frustum', () {
     FrustumTest ft = new FrustumTest();
     ft.run();
+  });
+
+  group('Noise', () {
+    NoiseTest nt = new NoiseTest();
+    nt.run();
   });
 }
 

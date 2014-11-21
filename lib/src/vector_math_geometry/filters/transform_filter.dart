@@ -16,16 +16,23 @@
   2. Altered source versions must be plainly marked as such, and must not be
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
+
 */
 
-part of vector_math_64;
+part of vector_math_geometry;
 
-/// Convert [radians] to degrees.
-double degrees(double radians) {
-  return radians * radians2degrees;
-}
+class TransformFilter extends InplaceGeometryFilter {
+  Matrix4 transform;
+  List<VertexAttrib> get requires => [new VertexAttrib('POSITION', 3, 'float')];
 
-/// Convert [degrees] to radians.
-double radians(double degrees) {
-  return degrees * degrees2radians;
+  TransformFilter(Matrix4 this.transform);
+
+  void filterInplace(MeshGeometry mesh) {
+    Vector3List position = mesh.getViewForAttrib('POSITION');
+    if (position != null) {
+      for (int i = 0; i < position.length; ++i) {
+        position[i] = transform * position[i];
+      }
+    }
+  }
 }

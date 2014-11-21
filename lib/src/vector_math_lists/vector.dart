@@ -21,7 +21,7 @@
 
 part of vector_math_lists;
 
-abstract class VectorList {
+abstract class VectorList<T extends Vector> {
   final int _vectorLength;
   final int _offset;
   final int _stride;
@@ -36,7 +36,7 @@ abstract class VectorList {
     return offset + width * length;
   }
 
-  VectorList(int length, int vectorLength, [int offset=0, int stride=0])
+  VectorList(int length, int vectorLength, [int offset = 0, int stride = 0])
       : _vectorLength = vectorLength,
         _offset = offset,
         _stride = stride == 0 ? vectorLength : stride,
@@ -81,9 +81,9 @@ abstract class VectorList {
     return _offset + _stride * index;
   }
 
-  dynamic newVector();
+  T newVector();
 
-  void load(int index, dynamic vector) {
+  void load(int index, T vector) {
     int bufferIndex = _vectorIndexToBufferIndex(index);
     for (int i = 0; i < _vectorLength; i++) {
       vector.storage[i] = _buffer[bufferIndex];
@@ -91,7 +91,7 @@ abstract class VectorList {
     }
   }
 
-  void store(int index, dynamic vector) {
+  void store(int index, T vector) {
     int bufferIndex = _vectorIndexToBufferIndex(index);
     for (int i = 0; i < _vectorLength; i++) {
       _buffer[bufferIndex] = vector.storage[i];
@@ -99,18 +99,32 @@ abstract class VectorList {
     }
   }
 
-  dynamic operator[](int index) {
+  void copy(VectorList src, {int srcOffset: 0, int offset: 0, int count: 0}) {
+    if (count == 0) {
+      count = Math.min(length - offset, src.length - srcOffset);
+    }
+    int minVectorLength = Math.min(_vectorLength, src._vectorLength);
+    for (int i = 0; i < count; i++) {
+      int index = _vectorIndexToBufferIndex(i + offset);
+      int srcIndex = src._vectorIndexToBufferIndex(i + srcOffset);
+      for (int j = 0; j < minVectorLength; j++) {
+        _buffer[index++] = src._buffer[srcIndex++];
+      }
+    }
+  }
+
+  T operator [](int index) {
     var r = newVector();
     load(index, r);
     return r;
   }
 
-  void operator[]=(int index, dynamic v) {
+  void operator []=(int index, T v) {
     store(index, v);
   }
 }
 
-class Vector2List extends VectorList {
+class Vector2List extends VectorList<Vector2> {
 
   Vector2List(int length, [int offset = 0, int stride = 0])
       : super(length, 2, offset, stride);
@@ -126,7 +140,7 @@ class Vector2List extends VectorList {
   }
 }
 
-class Vector3List extends VectorList {
+class Vector3List extends VectorList<Vector3> {
 
   Vector3List(int length, [int offset = 0, int stride = 0])
       : super(length, 3, offset, stride);
@@ -142,7 +156,7 @@ class Vector3List extends VectorList {
   }
 }
 
-class Vector4List extends VectorList {
+class Vector4List extends VectorList<Vector4> {
 
   Vector4List(int length, [int offset = 0, int stride = 0])
       : super(length, 4, offset, stride);

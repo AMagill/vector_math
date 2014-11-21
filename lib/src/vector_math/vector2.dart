@@ -22,7 +22,7 @@
 part of vector_math;
 
 /// 2D column vector.
-class Vector2 {
+class Vector2 implements Vector {
   final Float32List storage = new Float32List(2);
 
   /// Set the values of [result] to the minimum of [a] and [b] for each line.
@@ -35,6 +35,13 @@ class Vector2 {
   static void max(Vector2 a, Vector2 b, Vector2 result) {
     result.x = Math.max(a.x, b.x);
     result.y = Math.max(a.y, b.y);
+  }
+
+  // Interpolate between [min] and [max] with the amount of [a] using a linear
+  // interpolation and set the values to [result].
+  static void mix(Vector2 min, Vector2 max, double a, Vector2 result) {
+    result.x = min.x + a * (max.x - min.x);
+    result.y = min.y + a * (max.y - min.y);
   }
 
   /// Construct a new vector with the specified values.
@@ -51,6 +58,9 @@ class Vector2 {
 
   /// Zero vector.
   Vector2.zero();
+
+  /// Splat [value] into all lanes of the vector.
+  Vector2.all(double value) : this(value, value);
 
   /// Copy of [other].
   Vector2.copy(Vector2 other) {
@@ -184,7 +194,7 @@ class Vector2 {
     sum += storage[1] * other.storage[1];
     return sum;
   }
-  
+
   /**
    * Transforms [this] into the product of [this] as a row vector,
    * postmultiplied by matrix, [arg].
@@ -196,7 +206,7 @@ class Vector2 {
     double v1 = storage[1];
     storage[0] = v0*arg.storage[0]+v1*arg.storage[1];
     storage[1] = v0*arg.storage[2]+v1*arg.storage[3];
-    
+
     return this;
   }
 
@@ -254,6 +264,13 @@ class Vector2 {
   Vector2 add(Vector2 arg) {
     storage[0] = storage[0] + arg.storage[0];
     storage[1] = storage[1] + arg.storage[1];
+    return this;
+  }
+
+  /// Add [arg] scaled by [factor] to [this].
+  Vector2 addScaled(Vector2 arg, double factor) {
+    storage[0] = storage[0] + arg.storage[0] * factor;
+    storage[1] = storage[1] + arg.storage[1] * factor;
     return this;
   }
 

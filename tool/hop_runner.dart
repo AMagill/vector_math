@@ -4,42 +4,32 @@ import 'dart:async';
 import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
+import 'package:hop_unittest/hop_unittest.dart';
 
+import 'generate_vector_math_64_task.dart';
 import '../test/console_test_harness.dart' as console_test_harness;
 
 void main(List<String> args) {
-  //
-  // Assert were being called from the proper location.
-  //
-  _assertKnownPath();
 
   //
   // Analyzer
   //
-  addTask('analyze_lib', createAnalyzerTask(['lib/vector_math.dart']));
+  addTask('analyze_lib', createAnalyzerTask(_getLibs));
 
   //
   // Unit test
   //
-  addTask('test', createUnitTestTask(console_test_harness.testCore));
+  addTask('test', createUnitTestTask(console_test_harness.main));
 
   //
-  // Doc generation
+  // Vector Math 64 generation
   //
-  addTask('docs', createDartDocTask(_getLibs));
+  addTask('generate_vector_math_64', createGenerateVectorMath64Task());
 
   //
   // Hop away!
   //
   runHop(args);
-}
-
-void _assertKnownPath() {
-  // since there is no way to determine the path of 'this' file
-  // assume that Directory.current() is the root of the project.
-  // So check for existance of /bin/hop_runner.dart
-  final thisFile = new File('tool/hop_runner.dart');
-  assert(thisFile.existsSync());
 }
 
 Future<List<String>> _getLibs() {
